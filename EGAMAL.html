@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CỐT ĐỜ</title>
+  <style>
+    .head {
+      display: flex;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100vh;
+      align-items: center;
+      justify-content: center;
+      margin-top: -30px;
+      border-left: 1px solid #746e6e;
+    }
+    .input-container,
+    .output-container {
+      width: 50%;
+      padding: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input[type="text"] {
+      width: 70%;
+      padding: 5px;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #391bae;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin-left:-40px ;
+    }
+    .result {
+      margin-top: 5px;
+      width: 70%;
+      padding: 5px;
+      border: 1px solid #746e6e;
+      height: 15px;
+    }
+#chuky{
+  margin-top: 5px;
+      width: 70%;
+      padding: 5px;
+      border: 1px solid #746e6e;
+      height: 100px;
+}
+#vbky{
+  margin-top: 5px;
+      width: 70%;
+      padding: 5px;
+      border: 1px solid #746e6e;
+      height: 100px;
+}
+  
+#chuky2{
+  margin-top: 5px;
+      width: 70%;
+      padding: 5px;
+      border: 1px solid #746e6e;
+      height: 100px;
+}
+#tb{
+  margin-top: 5px;
+      width: 70%;
+      padding: 5px;
+      border: 1px solid #746e6e;
+      height: 50px;
+}
+#ky {
+  height: 100px;
+  white-space: pre-wrap;
+}
+
+  </style>
+</head>
+<body>
+  <div class="head">
+    <!--   tạo khóa   -->
+    <div class="container">
+      <div class="input-container">
+        <h2 style="margin-top: -30px;">Tạo khóa</h2>
+        <label for="p">Số nguyên tố p:</label>
+        <input type="text" id="p" placeholder="Nhập giá trị p">
+
+        <label for="a">Số a(alpha):</label>
+        <input type="text" id="a" placeholder="Nhập giá trị a">
+
+        <label for="x">Khóa bí mật x:</label>
+        <input type="text" id="x" placeholder="Nhập giá trị x">
+      </div>
+
+      <div class="output-container">
+        <label for="beta">Beta = a^x mod p:</label>
+        <div class="result" id="beta"></div>
+      </div>
+      <div class="input-container">
+        <label for="k">Số ngẫu nhiên k:</label>
+        <input type="text" id="k" placeholder="Nhập giá trị k">
+      </div>
+      <div class="output-container">
+        <label for="y">Y = a^k mod p:</label>
+        <div class="result" id="y"></div>
+      </div>
+      <button onclick="randomNumbers()" style="width: 37.5%; margin-left: -59px;">Chọn số ngẫu nhiên</button>
+    </div>
+    <!--   Phát sinh chữ ký   -->
+
+    <div class="container"  style="margin-top: -70px; width: 100%;">
+      <h2 style="margin-bottom: 30px;">Phát sinh chữ ký</h2>
+        <label for="ky" >Văn bản ký:</label>
+        <textarea id="ky" placeholder="Nhập văn bản ký" style="height: 100px; width: 70%;"></textarea>
+        <div>
+       <button style="margin: 10px 20px 10px 10px;" id="file">File</button>
+      <button style="margin: 10px 10px 10px 20px;" id="ki">Ký</button>  
+    </div>  
+          <label for="chuky" style="margin-top:100px ;">Chữ ký: </label>
+          <div  id="chuky"></div>
+          <div>
+          <button style="margin: 10px 20px 10px 10px; " id="chuyen">Chuyển</button>
+          <button style="margin: 10px 10px 10px 20px;" id="luu">Lưu</button>
+        </div>
+      </div>     
+<!--   Kiểm tra chữ ký   -->
+
+     
+    <div class="container" style="margin-top: -10px;">
+      <h2 style="margin-bottom: 30px;">Kiểm chữ ký</h2>
+       <!-- <label for="vbky" style="margin-top:-15px ;">Văn bản ký: </label> -->
+       <label for="vbky" >Văn bản ký:</label> 
+      <textarea id="vbky" placeholder="Nhập thông tin" style="height: 100px; width: 70%;"></textarea> 
+      <!-- <div  id="vbky"></div>  -->
+      <div>
+      <button style="margin: 10px 20px 10px 10px;" id="filevb">File văn bản</button>
+    </div> 
+    <p>===========================</p>
+          <label for="chuky2">Chữ ký: </label>
+          <div  id="chuky2"></div>
+          <div>
+          <button style="margin: 10px 20px 10px 10px;" id="fileck">File chữ ký</button>
+        </div>
+        <p>===========================</p>
+        <div>
+          <button style="margin: 10px 20px 10px 10px;" id="kt">Kiểm tra chữ ký</button>
+        </div>
+          <label for="tb">Thông báo:</label>
+          <div class="tb" id="tb"></div>
+      </div>
+    </div>
+
+  <script>
+var Y ;
+var beta ;
+var p ;
+var a;
+var x;
+var k;
+var chuky;
+var br;
+    //kiểm tra sô nguyên tố
+    function isPrime(number) {
+      if (number < 2) return false;
+      for (let i = 2; i <= Math.sqrt(number); i++) {
+        if (number % i === 0) return false;
+      }
+      return true;
+    }
+    function ucln(a,b){
+      if(a==b) return a;
+      if(a==0) return b;
+      if(b==0) return b;
+      if(a>b) return ucln(a-b,b);
+      return ucln(a,b-a);
+    }
+    //hàm tính n^-1 mod m
+    function oclit(n, m) {
+    let kd = m;
+    let r = 1, q, y0 = 0, y1 = 1, y = 0;
+    while (n !== 0) {
+        r = m % n;
+        if (r === 0) {
+            break;
+        } else {
+            q = Math.floor(m / n);
+            y = y0 - y1 * q;
+            m = n;
+            n = r;
+            y0 = y1;
+            y1 = y;
+        }
+    }
+    if (y >= 0) {
+        return y;
+    } else {
+        y = kd + y;
+        return y;
+    }
+}
+
+//hàm tính m^e mod n
+    function tinh(m, e, n) {
+    var a = [];
+    var k = 0;
+    var p = 1;
+    do {
+        a[k] = e % 2;
+        e = Math.floor(e / 2);
+        k++;
+    } while (e !== 0);
+    for (var i = k - 1; i >= 0; i--) {
+        p = (p * p) % n;
+        if (a[i] === 1) {
+            p = (p * m) % n;
+        }
+    }
+    return p;
+}
+// kpl(p,alpha,beta)
+// kpr(X)
+ // δ = ((br – a* γ).k^-1 mod(p - 1) ) mod (p - 1).
+   function ow(br, a, Y, k, p) {
+    let pp = oclit(k, p - 1);
+                            
+    let z = ((br - a * Y) * pp) % (p - 1);
+    if (z >= 0) {
+        return z;
+    }
+    return p - 1 + z;
+}
+
+function randomNumbers() {
+  //  var p, a, x, k;
+ // kpl(p,alpha,beta)
+// kpr(X)
+    // Random số nguyên tố p
+    do {
+        p = Math.floor(Math.random() * 901) + 100; // Random số từ 100 đến 1000
+    } while (!isPrime(p));
+
+    // Random phần tử nguyên thuỷ alpha
+    do {
+        a = Math.floor(Math.random() * (p - 3)) + 2; // Random số từ 2 đến p-2
+    } while (tinh(Math.pow(a, p - 1), 1, p) != 1);
+
+    // Random khóa bí mật x
+    x = Math.floor(Math.random() * (p - 1)) + 1; // Random số từ 1 đến p-1
+
+    // Random phần tử k ngau nhien
+       do {
+      k = Math.floor(Math.random() * (p - 1)) + 1; // Random số từ 1 đến p-1
+    } while (ucln(k,p-1)!=1);
+    // Hiển thị các giá trị đã random
+    document.getElementById("p").value = p;
+    document.getElementById("a").value = a;
+    document.getElementById("x").value = x;
+    document.getElementById("k").value = k;
+
+    // Xóa kết quả beta và y
+    document.getElementById("beta").innerText = "";
+    document.getElementById("y").innerText = "";
+
+    // Tính giá trị beta = a^x mod p và Y = a^k mod p
+     beta = tinh(a, x, p);
+     Y = tinh(a, k, p);
+
+    // Hiển thị kết quả
+    var resultElement = document.getElementById("beta");
+    resultElement.innerText = beta;
+    resultElement = document.getElementById("y");
+    resultElement.innerText = Y;
+}
+function isInteger(value) {
+  return Number.isInteger(Number(value));
+}
+
+document.getElementById("ki").addEventListener("click", function() {
+  var inputText = document.getElementById("ky").value; // Lấy đoạn mã từ trường input
+  var asciiSum = 0;
+  if (isInteger(inputText)) {
+    // Nếu đầu vào là số nguyên
+    br = parseInt(inputText);
+  } else {
+    // Nếu đầu vào là chuỗi
+    // Lặp qua từng ký tự trong đoạn mã và chuyển đ ổi thành mã ASCII
+    for (var i = 0; i < inputText.length; i++) {
+      var charCode = inputText.charCodeAt(i); // Chuyển đổi ký tự thành mã ASCII
+      asciiSum += charCode; // Tính tổng mã ASCII
+    }
+    br = asciiSum; // Lưu kết quả vào biến br
+  }
+console.log("br1"+br);
+  // Lấy giá trị của p, a, x, và k từ các trường input
+ p = parseInt(document.getElementById("p").value);
+ a = parseInt(document.getElementById("a").value);
+ x = parseInt(document.getElementById("x").value);
+ k = parseInt(document.getElementById("k").value);
+ if(!isPrime(p)){
+    confirm(p+' không phải sô nguyên tố, yêu cầu nhập lại! ');
+    return;
+  }
+  if (ucln(k, parseInt(document.getElementById("p").value) - 1) != 1) {
+  confirm('GCD(' + k + ',' + (parseInt(document.getElementById("p").value) - 1) + ') khác 1, yêu cầu nhập lại!');
+  return;
+}
+
+  if(tinh(Math.pow(a, p - 1), 1, p) != 1){
+    confirm(a+' không thuộc Z* yêu cầu nhập lại!');
+    return;
+  }
+
+  // Tính giá trị Y và beta
+ Y = tinh(a, k, p);
+ beta = tinh(a, x, p);
+    // Gán giá trị của Y và beta vào các phần tử HTML tương ứng
+    document.getElementById("y").innerText = Y;
+    document.getElementById("beta").innerText = beta;
+
+  // Tính giá trị chữ ký
+   chuky = "(" + Y + ", " + ow(br, x, Y, k, p) + ")";
+console.log('ow'+ow(br, x, Y, k, p)),
+  // Gán giá trị chữ ký vào phần tử HTML tương ứng
+  document.getElementById("chuky").innerText = chuky;
+});
+document.getElementById("luu").addEventListener("click", function() {
+  var chuky = document.getElementById("chuky").innerText; // Lấy thông tin chữ ký từ phần tử HTML
+
+  // Hỏi người dùng tên tệp tin
+  var tenTep = prompt("Nhập tên tệp tin:");
+
+  // Tạo đối tượng File với nội dung là chữ ký và tên tệp tin do người dùng đặt
+  var file = new File([chuky], tenTep, { type: "text/plain" });
+
+  // Tạo đường dẫn URL cho tệp tin
+  var url = URL.createObjectURL(file);
+
+  // Tạo phần tử a để tải xuống tệp tin
+  var link = document.createElement("a");
+  link.href = url;
+  link.download = file.name;
+  link.click();
+});
+//=====clickchuyen
+document.getElementById("chuyen").addEventListener("click", function() {
+  // var kyContent = document.getElementById("ky").value; // Lấy nội dung từ phần tử có id "ky"
+   var chuky2Content = ""; // Khởi tạo nội dung cho phần tử có id "chuky2"
+
+  // // Gán nội dung của "ky" vào "vbky"
+  document.getElementById("vbky").innerText =  document.getElementById("ky").value;;
+
+  document.getElementById("chuky2").innerText = chuky;
+});
+
+//============================================//
+ 
+
+    document.getElementById("file").addEventListener("click", function() {
+  // Tạo một phần tử input kiểu "file"
+  var input = document.createElement("input");
+  input.type = "file";
+
+  // Thêm sự kiện nghe khi đã chọn tệp
+  input.addEventListener("change", function(event) {
+    var file = event.target.files[0]; // Lấy tệp đã chọn
+
+    // Đọc nội dung của tệp
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var content = e.target.result; // Nội dung tệp
+      document.getElementById("ky").value = content; // Gán nội dung vào id "ky"
+    };
+    reader.readAsText(file); // Đọc tệp dưới dạng văn bản
+  });
+
+  // Kích hoạt sự kiện chọn tệp khi nhấp vào nút "File"
+  input.click();
+});
+document.getElementById("filevb").addEventListener("click", function() {
+  // Tạo một phần tử input kiểu "file"
+  var input = document.createElement("input");
+  input.type = "file";
+
+  // Thêm sự kiện nghe khi đã chọn tệp
+  input.addEventListener("change", function(event) {
+    var file = event.target.files[0]; // Lấy tệp đã chọn
+
+    // Đọc nội dung của tệp
+    var reader = new FileReader();
+
+    // Sự kiện xảy ra khi tệp đã được đọc
+    reader.onload = function(e) {
+      var fileContent = e.target.result; // Lấy nội dung tệp đã đọc
+      document.getElementById("vbky").innerText = fileContent; // Gán nội dung vào id "vbky"
+    };
+
+    reader.readAsText(file); // Đọc tệp dưới dạng văn bản
+  });
+
+  // Kích hoạt sự kiện chọn tệp khi nhấp vào nút "File"
+  input.click();
+});
+
+
+document.getElementById("fileck").addEventListener("click", function() {
+  // Tạo một phần tử input kiểu "file"
+  var input = document.createElement("input");
+  input.type = "file";
+
+  // Thêm sự kiện nghe khi đã chọn tệp
+  input.addEventListener("change", function(event) {
+    var file = event.target.files[0]; // Lấy tệp đã chọn
+
+    // Đọc nội dung của tệp
+    var reader = new FileReader();
+
+    // Sự kiện xảy ra khi tệp đã được đọc
+    reader.onload = function(e) {
+      var fileContent = e.target.result; // Lấy nội dung tệp đã đọc
+      document.getElementById("chuky2").innerText = fileContent; // Gán nội dung vào id "chuky2"
+    };
+
+    reader.readAsText(file); // Đọc tệp dưới dạng văn bản
+  });
+
+  // Kích hoạt sự kiện chọn tệp khi nhấp vào nút "File"
+  input.click();
+});
+
+
+ document.getElementById("chuky2").addEventListener("click", function() {
+    // Tạo một phần tử input kiểu "file"
+       var input = document.createElement("input");
+       input.type = "file"
+    // Thêm sự kiện nghe khi đã chọn tệp
+       input.addEventListener("change", function(event) {
+           var file = event.target.files[0]; // Lấy tệp đã chọ
+    // Đọc nội dung của tệp
+           var reader = new FileReader();
+           reader.onload = function(e) {
+               var content = e.target.result; // Nội dung tệp
+               document.getElementById("vbky").innerText = content; // Gán nội dung vào id "vbky"
+           };
+           reader.readAsText(file); // Đọc tệp dưới dạng văn bản
+       })
+    // Kích hoạt sự kiện chọn tệp khi nhấp vào nút "File"
+            input.click();
+  });
+
+  //=====================//
+  //hàm kiểm tra chuw kí
+  document.getElementById("kt").addEventListener("click", function() {
+    //  =========================== Tinh ve trai      (beta^Y mod p * Y^ow) mod p //
+  t = (tinh(beta, Y, p) * tinh(Y, ow(br, x, Y, k, p), p)) % p;
+  console.log('t'+t);
+  console.log('ow2'+ow(br, x, Y, k, p));
+  // =========================== Tinh ve phai      (a^br) mod p     //
+  var inputText = document.getElementById("vbky").value; // Lấy đoạn mã từ trường input
+  var asciiSum = 0;
+  if (isInteger(inputText)) {
+    // Nếu đầu vào là số nguyên
+    br = parseInt(inputText);
+  } else {
+    // Nếu đầu vào là chuỗi
+    // Lặp qua từng ký tự trong đoạn mã và chuyển đ ổi thành mã ASCII
+    for (var i = 0; i < inputText.length; i++) {
+      var charCode = inputText.charCodeAt(i); // Chuyển đổi ký tự thành mã ASCII
+      asciiSum += charCode; // Tính tổng mã ASCII
+    }
+    br = asciiSum; // Lưu kết quả vào biến br
+  }
+  //====
+  console.log('br'+br);
+  b = tinh(a, br, p);
+  console.log('b'+b);
+  document.getElementById("tb").innerText = "";
+  if (t == b) {
+    // Chữ ký đúng
+    document.getElementById("tb").innerText = 'Chữ ký đúng';
+  } else {
+    // Chữ ký sai
+    document.getElementById("tb").innerText = 'Chữ ký sai';
+  }
+});
+
+  </script>
+</body>
+</html>
+
